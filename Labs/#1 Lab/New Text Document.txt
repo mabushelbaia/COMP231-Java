@@ -1,0 +1,9 @@
+import java.util.Scanner;
+public class ConvertProgram{
+    final static double KMS_PER_MILES=1.609;
+    public static void main(String[]args){
+        for (int i=1; i<=100; i++){
+		System.out.println(i);
+	}
+    }
+}

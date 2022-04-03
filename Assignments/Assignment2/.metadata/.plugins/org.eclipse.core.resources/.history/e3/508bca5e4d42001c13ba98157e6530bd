@@ -1,0 +1,96 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Enter Number of Classes: ");
+        int numberClasses = input.nextInt();
+        Students[][] arr = new Students[numberClasses][];
+
+
+        for (int i=0;i<numberClasses;i++) {
+            System.out.println("Enter Number of Students in Class#" + (i + 1) + ": ");
+            int numberStudents = input.nextInt();
+
+            while (numberStudents <= 1 || numberStudents >= 100) {
+                System.out.println("Error : Number of students must be between 1-100 exclusive.");
+                numberStudents = input.nextInt();
+            }
+            arr[i] = new Students[numberStudents];
+            for (int j=0;j<numberStudents;j++) {
+                Scanner scanner = new Scanner(System.in).useDelimiter("\\n");
+
+                String rawInput = scanner.next();
+                String[] tokens = rawInput.split(" ");
+                arr[i][j] =  new Students(tokens[0],tokens[1],Long.parseLong(tokens[2]), tokens[3]);
+
+            }
+        }
+
+        for (int i=0;i<numberClasses;i++) {
+            sortStudents(arr,'a');
+            System.out.println("\nClass #"+(i+1)+" Sorted:");
+            for (int j=0;j<arr[i].length;j++) {
+                System.out.println(arr[i][j].getName());
+            }
+
+        }
+        for (int i=0;i<numberClasses;i++) {
+            System.out.println("\nEnter Grades for CLASS #"+(i+1)+": ");
+            for (int j=0;j<arr[i].length;j++) {
+                System.out.print(arr[i][j].getName() + ": ");
+                arr[i][j].setGrade(input.nextDouble());
+            }
+
+        }
+        for (int i=0;i<numberClasses;i++) {
+            System.out.println("\nClass #"+(i+1)+" Ordering:");
+            for (int j=0;j<arr[i].length;j++) {
+                System.out.println(arr[i][j].getRequestedOutput());
+            }
+            System.out.println("Average of Class: "+ classAverage(arr[i]));
+
+        }
+
+    }
+
+    public static void sortStudents(Students[][] studentsArr,char ch) {
+        for(Students []students : studentsArr) {
+            if (ch > 'z')
+                return;
+            for (int i = 0; i < students.length - 1; i++)
+                for (int j = 0; j < students.length - i - 1; j++) {
+                    int charCountStudent1 = charCount(students[j].getLast_name(), ch);
+                    int charCountStudent2 = charCount(students[j + 1].getLast_name(), ch);
+                    if (charCountStudent1 < charCountStudent2) {
+                        Students temp = students[j];
+                        students[j] = students[j + 1];
+                        students[j + 1] = temp;
+                        return;
+
+                    } else if (charCountStudent1 == charCountStudent2) {
+                        sortStudents(studentsArr, ++ch);
+                    }
+
+                }
+        }
+    }
+    public static int charCount(String str, char ch) {
+        str = str.toLowerCase();
+        int count = 0;
+        for(int i=0;i<str.length();i++)
+            if(str.charAt(i) ==  ch)
+                count++;
+        return count;
+    }
+    public static double classAverage(Students[] students) {
+        double sum = 0;
+        for (Students student : students) {
+            sum += student.getGrade();
+        }
+        return sum/students.length;
+    }
+
+}
